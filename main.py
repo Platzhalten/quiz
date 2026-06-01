@@ -425,4 +425,4 @@ async def main():
         game_states.update_screen()
         await asyncio.sleep(0)
 
-asyncio.run(main())
+asyncio.ensure_future(main())
