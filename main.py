@@ -5,6 +5,8 @@ from pygame.locals import *
 
 class States:
     def __init__(self, window_size: tuple[int, int] = (800, 600)):
+        self.is_web = False
+
         self.debug = True
         self.base_window_size = window_size
         self.base_window_size_ratio = window_size[0] / window_size[1]
@@ -243,30 +245,30 @@ pygame.init()
 
 async def main():
     points = ["100", "200", "300", "400"]
-    thema = ["Punktzahl", "Geschichte\nDefinition", "Vorteile", "Nachteile", "Ausbildung\nHandwerk"]
+    thema = ["Geschichte\nDefinition", "Vorteile", "Nachteile", "Ausbildung\nHandwerk"]
     questions = {
-        thema[1]: [
+        thema[0]: [
             "Wann entstanden Zünfte?",
             "Gibt es heute noch Zünfte?",
             "Was ist eine Zunft?",
             "Was ist eine Sammelzunft?",
         ],
 
-        thema[2]: [
+        thema[1]: [
             "GRATIS PUNKTE",
             "Nennt ein Vorteil einer Zunft",
-            "Was geschah, wenn ein Zunftmitglied starb?",
-            "Was taten, Zünfte das alle Handwerker genug verdienen?",
+            "Was geschah wenn ein Zunftmitglied starb?",
+            "Was taten Zünfte das alle Handwerker genug verdienen?",
         ],
 
-        thema[3]: [
+        thema[2]: [
             "Wer war (fast) komplett von\neiner Mitgliedschaft ausgeschlossen?",
             "Welche Berufe wurden als ehrlos angesehen?",
             "Warum gab es weniger Innovation?",
             "GRATIS PUNKTE"
         ],
 
-        thema[4]: [
+        thema[3]: [
             "Wer durfte Lehrlinge Ausbilden?",
             "Nenne die 3 Ausbildungstufen",
             "GRATIS PUNKTE",
@@ -275,28 +277,28 @@ async def main():
     }
 
     answers = {
-        thema[1]: [
+        thema[0]: [
             "Im 11./12. Jahrhundert",
             "Ja, diese haben aber andere Aufgaben, z.B. die Sozialhilfe.",
             "Zusammenschluss von Handwerkern\nwelche die gleiche Profession haben.",
             "Eine Zunft wo mehrere Professionen in\neiner Zunft zusammengefasst sind.",
         ],
 
-        thema[2]: [
+        thema[1]: [
             "GRATIS PUNKTE",
             "Viele Antwortsmöglichkeiten.",
             "Gemeinsamer Trauermarsch durch die Stadt\noder\nUnterstützung der Witwe und Bezahlung der Beerdigung.",
             "Sie regulierten Preise und Herstellungsmethoden.",
         ],
 
-        thema[3]: [
+        thema[2]: [
             "Frauen (andere Gruppen auch Möglich)",
             "z.B. Müller/Totengräber/Henker",
             "Weil Produktionsmethoden vorgeschrieben wurden und\nneuer Erfindungen eingeschränkt waren",
             "GRATIS PUNKTE"
         ],
 
-        thema[4]: [
+        thema[3]: [
             "Ein Meister",
             "Lehrling, Geselle und der Meister",
             "GRATIS PUNKTE",
@@ -315,43 +317,16 @@ async def main():
             row_test_index = row_index
             collum_test_index = collum_index + 1
 
-            new_button = QuestionButton(game_states.win,
-                                        collum[collum_test_index],
-                                        row[row_test_index + 1],
-                                        "???",
-                                        category_amount_button_active_color,
-                                        category_amount_button_inactive_color,
-                                        category,
-                                        points[row_test_index])
+            QuestionButton(game_states.win, collum[collum_test_index], row[row_test_index + 1], "???", category_amount_button_active_color, category_amount_button_inactive_color, category, points[row_test_index])
 
-    money_button = TextButton(game_states.win, collum[0], row[0], 150, 50, thema[0], "Black", None,
-                              category_amount_button_active_color, category_amount_button_inactive_color,
-                              game_states.ui_render_group)
-    category_button1 = TextButton(game_states.win, collum[1], 100, 200, 50, thema[1], "Black", None,
-                                  category_amount_button_active_color, category_amount_button_inactive_color,
-                                  game_states.ui_render_group)
-    category_button2 = TextButton(game_states.win, collum[2], 100, 200, 50, thema[2], "Black", None,
-                                  category_amount_button_active_color, category_amount_button_inactive_color,
-                                  game_states.ui_render_group)
-    category_button3 = TextButton(game_states.win, collum[3], 100, 200, 50, thema[3], "Black", None,
-                                  category_amount_button_active_color, category_amount_button_inactive_color,
-                                  game_states.ui_render_group)
-    category_button4 = TextButton(game_states.win, collum[4], 100, 200, 50, thema[4], "Black", None,
-                                  category_amount_button_active_color, category_amount_button_inactive_color,
-                                  game_states.ui_render_group)
+    TextButton(game_states.win, collum[0], row[0], 150, 50, "Punktzahl", "Black", None,
+               category_amount_button_active_color, category_amount_button_inactive_color, game_states.ui_render_group)
 
-    amount_button1 = TextButton(game_states.win, collum[0], row[1], 150, 50, points[0], "Black", None,
-                                category_amount_button_active_color, category_amount_button_inactive_color,
-                                game_states.ui_render_group)
-    amount_button2 = TextButton(game_states.win, collum[0], row[2], 150, 50, points[1], "Black", None,
-                                category_amount_button_active_color, category_amount_button_inactive_color,
-                                game_states.ui_render_group)
-    amount_button3 = TextButton(game_states.win, collum[0], row[3], 150, 50, points[2], "Black", None,
-                                category_amount_button_active_color, category_amount_button_inactive_color,
-                                game_states.ui_render_group)
-    amount_button4 = TextButton(game_states.win, collum[0], row[4], 150, 50, points[3], "Black", None,
-                                category_amount_button_active_color, category_amount_button_inactive_color,
-                                game_states.ui_render_group)
+    for index, current_theme in enumerate(thema, start=1):
+        TextButton(game_states.win, collum[index], 100, 200, 50, current_theme, "Black", None, category_amount_button_active_color, category_amount_button_inactive_color, game_states.ui_render_group)
+
+    for index, point in enumerate(points, start=1):
+        TextButton(game_states.win, collum[0], row[index], 150, 50, point, "Black", None, category_amount_button_active_color, category_amount_button_inactive_color, game_states.ui_render_group)
 
     # Question Screen
     the_question = TextButton(game_states.win, game_states.win.width / 2, game_states.win.height / 2, 1, 1, "None",
@@ -367,9 +342,8 @@ async def main():
                                 game_states.the_question_button_group)
 
     # Always on screen
-    team_red = TeamButton(game_states.win, 300, 650, "0", "red")
-    team_blue = TeamButton(game_states.win, 550, 650, "0", "blue")
-    team_yellow = TeamButton(game_states.win, 800, 650, "0", "yellow")
+    for index, team_color in enumerate(["red", "blue", "yellow"]):
+        TeamButton(game_states.win, 300 + (index * 250), 650, "0", team_color)
 
     run = True
     while run:
@@ -423,6 +397,11 @@ async def main():
         game_states.win.fill("white")
 
         game_states.update_screen()
-        await asyncio.sleep(0)
 
-asyncio.ensure_future(main())
+        if game_states.is_web:
+            await asyncio.sleep(0)
+
+if game_states.is_web:
+    asyncio.ensure_future(main())
+else:
+    asyncio.run(main())
