@@ -1,16 +1,18 @@
 import asyncio
+from asyncio import protocols
 
 import pygame
 from pygame.locals import *
 
 class States:
     def __init__(self, window_size: tuple[int, int] = (800, 600)):
-        self.is_web = False
+        self.is_web = not "__file__" in globals()
 
         self.debug = True
         self.base_window_size = window_size
         self.base_window_size_ratio = window_size[0] / window_size[1]
 
+        pygame.display.set_caption("Quiz")
         self._win = pygame.display.set_mode(window_size)
         self._outside_win = pygame.Surface(window_size)
 
@@ -27,9 +29,7 @@ class States:
         self.team_button_group = []
         self.current_selected_team = None
 
-        self.is_open_question = False
-
-
+        self._is_open_question = False
 
     def update_screen(self):
         current_window_size = self._win.get_size()
@@ -75,6 +75,20 @@ class States:
         pygame.display.flip()
 
     @property
+    def is_open_question(self):
+        return self._is_open_question
+
+    @is_open_question.setter
+    def is_open_question(self, value: bool):
+        if not value:
+            print(value)
+            current_team_index = (self.team_button_group.index(self.current_selected_team) + 1 ) % len(self.team_button_group)
+
+            self.current_selected_team = self.team_button_group[current_team_index]
+
+        self._is_open_question = value
+
+    @property
     def mouse_pos(self):
         return self._mouse_pos
 
@@ -92,7 +106,6 @@ class States:
 
 
 game_states = States((1280, 720))
-
 
 
 class Button:
@@ -127,14 +140,24 @@ class Button:
         self.width = width
         self.height = height
 
-        self.active_background_color = active_background_color
-        self.inactive_background_color = inactive_background_color
 
         self.rect = pygame.Rect(position_x, position_y, width, height)
 
         self.enable_background = enable_background
-        if active_background_color is None or inactive_background_color is None:
+
+        if active_background_color is None:
+            self.active_background_color = ""
             self.enable_background = False
+
+        else:
+            self.active_background_color = active_background_color
+
+        if inactive_background_color is None:
+            self.inactive_background_color = ""
+            self.enable_background = False
+
+        else:
+            self.inactive_background_color = inactive_background_color
 
         if render_group is not None:
             render_group.append(self)
@@ -163,8 +186,6 @@ class Button:
 
 
 class TextButton(Button):
-
-
     def __init__(self, source: pygame.Surface, position_x: float | int, position_y: float | int, width: float | int, height: float | int,
                  text: str, text_color: list[int] | tuple[int, int, int] | str, text_font: str | None,
                  active_background_color: list[int] | tuple[int, int, int] | None,
@@ -344,6 +365,8 @@ async def main():
     # Always on screen
     for index, team_color in enumerate(["red", "blue", "yellow"]):
         TeamButton(game_states.win, 300 + (index * 250), 650, "0", team_color)
+
+    game_states.current_selected_team = game_states.team_button_group[0]
 
     run = True
     while run:
