@@ -234,12 +234,13 @@ class QuestionButton(TextButton):
 
 class TeamButton(TextButton):
     def __init__(self, source: pygame.Surface, position_x: float | int, position_y: float | int,  text: str,
-                 team_color: str | tuple[int, int, int] ):
+                 team_color: str | tuple[int, int, int], team_name: str):
         super().__init__(source, position_x, position_y, 200, 50, text, "Black", None,
                          None,None, render_group=game_states.team_button_group)
 
         self.points = 0
         self.team_color = team_color
+        self.team_name = team_name
 
     def draw(self) -> None:
         """
@@ -363,8 +364,14 @@ async def main():
                                 game_states.the_question_button_group)
 
     # Always on screen
+    german_names = {
+        "red": "Rot",
+        "blue": "Blau",
+        "yellow": "Gelb"
+    }
+
     for index, team_color in enumerate(["red", "blue", "yellow"]):
-        TeamButton(game_states.win, 300 + (index * 250), 650, "0", team_color)
+        TeamButton(game_states.win, 300 + (index * 250), 650, "0", team_color, team_name=german_names[team_color])
 
     game_states.current_selected_team = game_states.team_button_group[0]
 
@@ -373,6 +380,10 @@ async def main():
         for e in pygame.event.get():
             if e.type == QUIT or (e.type == KEYDOWN and e.key == K_BACKSPACE):
                 run = False
+
+            if e.type == KEYDOWN:
+                if e.key == K_ESCAPE and game_states.is_open_question:
+                    game_states.is_open_question = False
 
             if e.type == MOUSEBUTTONUP and e.button == 1:
 
@@ -416,6 +427,26 @@ async def main():
                             game_states.is_open_question = True
 
                             game_states.question_button_group.remove(i)
+
+        if not game_states.question_button_group and not game_states.is_open_question:
+            winner_color = ""
+            highest_points_amount = 0
+            for i in game_states.team_button_group:
+                if i.points < highest_points_amount:
+                    continue
+
+                winner_color = i.team_name
+                highest_points_amount = i.points
+
+            game_states.the_question_group = []
+
+            winner = TextButton(game_states.win, game_states.win.width / 2, game_states.win.height / 2, 1, 1,
+                                f"Das Team {winner_color} hat mit {highest_points_amount} Punkte gewonne",
+                                "Black", None, None, None,
+                                game_states.the_question_group, 40)
+
+            game_states.is_open_question = True
+
 
         game_states.win.fill("white")
 
