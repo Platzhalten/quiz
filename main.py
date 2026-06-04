@@ -47,12 +47,9 @@ async def main():
     category_amount_button_active_color = (150, 150, 150)
     category_amount_button_inactive_color = (160, 160, 160)
 
-    for collum_index, category in enumerate(list(questions.keys())):
-        for row_index, question in enumerate(questions[category]):
-            row_test_index = row_index
-            collum_test_index = collum_index + 1
-
-            QuestionButton(game_states.win, collum[collum_test_index], row[row_test_index + 1], "???", category_amount_button_active_color, category_amount_button_inactive_color, category, points[row_test_index])
+    for collum_index, category in enumerate(list(questions.keys()), start= 1):
+        for row_index, question in enumerate(questions[category], start=1):
+            QuestionButton(game_states.win, collum[collum_index], row[row_index], "???", category_amount_button_active_color, category_amount_button_inactive_color, category, question)
 
     TextButton(game_states.win, collum[0], row[0], 150, 50, "Punktzahl", "Black", None,
                category_amount_button_active_color, category_amount_button_inactive_color, game_states.ui_render_group)
