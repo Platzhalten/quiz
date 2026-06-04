@@ -118,12 +118,12 @@ class TextButton(Button):
 class QuestionButton(TextButton):
     def __init__(self, source: pygame.Surface, position_x: float | int, position_y: float | int,  text: str,
                  active_background_color: list[int] | tuple[int, int, int],
-                 inactive_background_color: list[int] | tuple[int, int, int], theme: str, points: str | int):
+                 inactive_background_color: list[int] | tuple[int, int, int], theme: str, question: str):
         super().__init__(source, position_x, position_y, 200, 50, text, "Black", None,
                          active_background_color, inactive_background_color, render_group=game_states.question_button_group)
 
         self.theme = theme
-        self.points = points
+        self.question = question
 
 
 

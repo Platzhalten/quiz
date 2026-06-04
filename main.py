@@ -12,65 +12,33 @@ pygame.init()
 
 async def main():
     points = ["100", "200", "300", "400"]
-    thema = ["Geschichte\nDefinition", "Vorteile", "Nachteile", "Ausbildung\nHandwerk"]
     questions = {
-        thema[0]: [
-            "Wann entstanden Zünfte?",
-            "Gibt es heute noch Zünfte?",
-            "Was ist eine Zunft?",
-            "Was ist eine Sammelzunft?",
-        ],
+        "Geschichte\nDefinition": {
+            "Wann entstanden Zünfte?": {"answer": "Im 11./12. Jahrhundert"},
+            "Gibt es heute noch Zünfte?": {"answer": "Ja, diese haben aber andere Aufgaben, z.B. die Sozialhilfe."},
+            "Was ist eine Zunft?": {"answer": "Zusammenschluss von Handwerkern\nwelche die gleiche Profession haben."},
+            "Was ist eine Sammelzunft?": {"answer": "Eine Zunft wo mehrere Professionen in\neiner Zunft zusammengefasst sind."},
+        },
+        "Vorteile": {
+            "GRATIS PUNKTE": {"answer": "GRATIS PUNKTE"},
+            "Nennt ein Vorteil einer Zunft": {"answer": "Viele Antwortsmöglichkeiten"},
+            "Was geschah wenn ein Zunftmitglied starb?": {"answer": "Gemeinsamer Trauermarsch durch die Stadt\noder\nUnterstützung der Witwe und Bezahlung der Beerdigung."},
+            "Was taten Zünfte das alle Handwerker genug verdienen?": {"answer": "Sie regulierten Preise und Herstellungsmethoden."},
+        },
 
-        thema[1]: [
-            "GRATIS PUNKTE",
-            "Nennt ein Vorteil einer Zunft",
-            "Was geschah wenn ein Zunftmitglied starb?",
-            "Was taten Zünfte das alle Handwerker genug verdienen?",
-        ],
+        "Nachteile": {
+            "Wer war (fast) komplett von\neiner Mitgliedschaft ausgeschlossen?": {"answer": "Frauen (andere Gruppen auch Möglich)"},
+            "Welche Berufe wurden als ehrlos angesehen?": {"answer": "z.B. Müller/Totengräber/Henker"},
+            "Warum gab es weniger Innovation?": {"answer": "Weil Produktionsmethoden vorgeschrieben wurden und\nneuer Erfindungen eingeschränkt waren"},
+            "GRATIS PUNKTE": {"answer": "GRATIS PUNKTE"}
+        },
 
-        thema[2]: [
-            "Wer war (fast) komplett von\neiner Mitgliedschaft ausgeschlossen?",
-            "Welche Berufe wurden als ehrlos angesehen?",
-            "Warum gab es weniger Innovation?",
-            "GRATIS PUNKTE"
-        ],
-
-        thema[3]: [
-            "Wer durfte Lehrlinge Ausbilden?",
-            "Nenne die 3 Ausbildungstufen",
-            "GRATIS PUNKTE",
-            "Was passierte, wenn man bei\neiner Qualitätskontrolle durchfiel?",
-        ]
-    }
-
-    answers = {
-        thema[0]: [
-            "Im 11./12. Jahrhundert",
-            "Ja, diese haben aber andere Aufgaben, z.B. die Sozialhilfe.",
-            "Zusammenschluss von Handwerkern\nwelche die gleiche Profession haben.",
-            "Eine Zunft wo mehrere Professionen in\neiner Zunft zusammengefasst sind.",
-        ],
-
-        thema[1]: [
-            "GRATIS PUNKTE",
-            "Viele Antwortsmöglichkeiten.",
-            "Gemeinsamer Trauermarsch durch die Stadt\noder\nUnterstützung der Witwe und Bezahlung der Beerdigung.",
-            "Sie regulierten Preise und Herstellungsmethoden.",
-        ],
-
-        thema[2]: [
-            "Frauen (andere Gruppen auch Möglich)",
-            "z.B. Müller/Totengräber/Henker",
-            "Weil Produktionsmethoden vorgeschrieben wurden und\nneuer Erfindungen eingeschränkt waren",
-            "GRATIS PUNKTE"
-        ],
-
-        thema[3]: [
-            "Ein Meister",
-            "Lehrling, Geselle und der Meister",
-            "GRATIS PUNKTE",
-            "Das Produkt wurde weggeschmissen und neu gemacht werden ",
-        ]
+        "Ausbildung\nHandwerk": {
+            "Wer durfte Lehrlinge Ausbilden?": {"answer": "Ein Meister"},
+            "Nenne die 3 Ausbildungstuffen": {"answer": "Lehrling, Geselle und der Meister"},
+            "GRATIS PUNKTE": {"answer": "GRATIS PUNKTE"},
+            "Was passierte, wenn man bei\neiner Qualitätskontrolle durchfiel?": {"answer": "Das Produkt wurde weggeschmissen und neu gemacht werden"},
+        }
     }
 
     collum = [50, 250, 500, 750, 1000]
@@ -89,7 +57,7 @@ async def main():
     TextButton(game_states.win, collum[0], row[0], 150, 50, "Punktzahl", "Black", None,
                category_amount_button_active_color, category_amount_button_inactive_color, game_states.ui_render_group)
 
-    for index, current_theme in enumerate(thema, start=1):
+    for index, current_theme in enumerate(questions.keys(), start=1):
         TextButton(game_states.win, collum[index], 100, 200, 50, current_theme, "Black", None, category_amount_button_active_color, category_amount_button_inactive_color, game_states.ui_render_group)
 
     for index, point in enumerate(points, start=1):
@@ -158,16 +126,24 @@ async def main():
                         if i.collidepoint(game_states.mouse_pos):
 
                             question_theme = i.theme
-                            question_points = i.points
+                            question = i.question
+
+                            question_dict = questions[question_theme][question]
+
+                            question_points = question_dict.get("points", None)
+
+                            if question_points is None:
+                                question_points = points[list(questions[question_theme].keys()).index(question)]
+
                             game_states.current_question_points = question_points
 
-                            question_text = questions[question_theme][points.index(question_points)]
+
 
                             the_question = TextButton(game_states.win, game_states.win.width / 2, game_states.win.height / 2, 1, 1,
-                                                      question_text, "Black", None, None, None,
+                                                      question, "Black", None, None, None,
                                                       game_states.the_question_group, 40)
 
-                            game_states.current_open_question_answer = answers[question_theme][points.index(question_points)]
+                            game_states.current_open_question_answer = question_dict["answer"]
                             game_states.the_question_group = [the_question]
                             game_states.current_window = "question"
 
