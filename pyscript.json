@@ -2,6 +2,8 @@
   "files": {
     "./main.py": "./main.py",
     "./game_states.py": "./game_states.py",
-    "./button.py": "./button.py"
+    "./button.py": "./button.py",
+    "./sprite/favicon/favicon-16x16.png": "./sprite/favicon/favicon-16x16.png",
+    "./sprite/favicon/favicon-32x32.png": "./sprite/favicon/favicon-32x32.png"
   }
 }
