@@ -27,7 +27,6 @@ class States:
         self.team_button_group = []
         self.current_selected_team = None
 
-        self._is_open_question = False
         self._current_window = "board"
 
     def update_screen(self):
@@ -82,25 +81,16 @@ class States:
         pygame.display.flip()
 
     @property
-    def is_open_question(self):
-        return self._is_open_question
-
-    @is_open_question.setter
-    def is_open_question(self, value: bool):
-        if not value:
-            print(value)
-            current_team_index = (self.team_button_group.index(self.current_selected_team) + 1 ) % len(self.team_button_group)
-
-            self.current_selected_team = self.team_button_group[current_team_index]
-
-        self._is_open_question = value
-
-    @property
     def current_window(self):
         return self._current_window
 
     @current_window.setter
-    def current_window(self, value):
+    def current_window(self, value: str):
+        if self._current_window == "question" and value == "board":
+            current_team_index = (self.team_button_group.index(self.current_selected_team) + 1 ) % len(self.team_button_group)
+
+            self.current_selected_team = self.team_button_group[current_team_index]
+
         self._current_window = value
 
     @property
