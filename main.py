@@ -14,7 +14,7 @@ async def main():
     points = ["100", "200", "300", "400"]
     questions = {
         "Geschichte\nDefinition": {
-            "Wann entstanden Zünfte?": {"answer": "Im 11./12. Jahrhundert"},
+            "Wann entstanden Zünfte?": {"answer": "Im 11./12. Jahrhundert"}, # required: answer; optionals: points(=sets a custom amount of points for the question)
             "Gibt es heute noch Zünfte?": {"answer": "Ja, diese haben aber andere Aufgaben, z.B. die Sozialhilfe."},
             "Was ist eine Zunft?": {"answer": "Zusammenschluss von Handwerkern\nwelche die gleiche Profession haben."},
             "Was ist eine Sammelzunft?": {"answer": "Eine Zunft wo mehrere Professionen in\neiner Zunft zusammengefasst sind."},
