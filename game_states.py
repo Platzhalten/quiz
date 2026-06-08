@@ -27,6 +27,8 @@ class States:
         self.team_button_group = []
         self.current_selected_team = None
 
+        self.start_menu_button_group = []
+
         self._current_window = "board"
 
     def update_screen(self):
@@ -53,6 +55,10 @@ class States:
             self._win.fill(color=(0, 0, 0))
 
         match self._current_window:
+            case "start":
+                for i in self.start_menu_button_group:
+                    i.draw()
+
             case "board":
                 for i in self.ui_render_group:
                     i.draw()

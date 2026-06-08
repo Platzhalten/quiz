@@ -52,6 +52,8 @@ questions = {
     }
 }
 
+
+# Question Screen
 go_back_button = TextButton(game_states.win, 100, 650, 150, 50, "Zurück", "Black", None,
                             category_amount_button_active_color, category_amount_button_inactive_color,
                             game_states.the_question_button_group)
@@ -64,6 +66,15 @@ give_points_to = TextButton(game_states.win, 1020, 650, 250, 50, "Übergebe Punk
                             category_amount_button_active_color, category_amount_button_inactive_color,
                             game_states.the_question_button_group)
 
+
+
+# Start Screen
+title_screen = TextButton(game_states.win, 100, 100, 400, 100, "QUIZ", "Black", None,None, None,
+                          game_states.start_menu_button_group, text_size=80)
+
+start_game_button = TextButton(game_states.win, 200, 300, 200, 100, "Spiel starten", "Black",
+                               None, category_amount_button_active_color, category_amount_button_inactive_color,
+                               game_states.start_menu_button_group)
 
 async def main():
     global points, questions
@@ -93,6 +104,8 @@ async def main():
 
     game_states.current_selected_team = game_states.team_button_group[0]
 
+    await start_menu_loop()
+
     run = True
     while run:
         for e in pygame.event.get():
@@ -117,6 +130,32 @@ async def main():
 
         if game_states.is_web:
             await asyncio.sleep(0)
+
+
+async def start_menu_loop():
+    game_states.current_window = "start"
+
+    run = True
+    while run:
+        for e in pygame.event.get():
+            if e.type == QUIT or (e.type == KEYDOWN and e.key == K_BACKSPACE):
+                run = False
+
+            if e.type == MOUSEBUTTONUP and e.button == 1:
+                if start_game_button.collidepoint(game_states.mouse_pos):
+                    game_states.current_window = "board"
+                    return
+
+
+        game_states.win.fill("white")
+
+        game_states.update_screen()
+
+        if game_states.is_web:
+            await asyncio.sleep(0)
+
+
+
 
 
 async def question_loop(question_button: QuestionButton, points_table: list[str]):
